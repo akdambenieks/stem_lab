@@ -1,0 +1,17 @@
+<div class='experiment-megapanel' >
+  <h1>Here are your Current Classrooms</h1>
+  <div class='button-nav'><h3><%= link_to 'Create New Classroom', new_classroom_path %></h3></div>
+  <% if !@classrooms[0]&.code_name %>
+    <h2>*** You currently have no classrooms ***</h2>
+    <p><strong>Please click the "Create New Classroom" link above to create a new classroom</strong></p>
+  </div>
+  <% else %>
+    </div>
+    <% @classrooms.each do |classroom| %>
+      <div class='experiment-subpanel'>
+        <h2>Code Name: <%= link_to classroom.code_name, classroom_path(classroom) %></h2>
+        <p><strong>Assigned Experiments: <%= classroom.experiments.count%> | Total Contributions: <%= classroom.data.count %></strong></p>
+      </div>
+    <% end %>
+  <% end %>
+</div>

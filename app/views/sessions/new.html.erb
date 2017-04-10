@@ -1,0 +1,21 @@
+<div class='card login'>
+  <%= form_tag sessions_path do %>
+    <div class='input-label'>
+      <h3><%= label_tag(:email) %></h3>
+    </div>
+    <div class='input-field'>
+      <%= text_field_tag(:email) %>
+    </div>
+
+    <div class='input-label'>
+      <h3><%= label_tag(:password) %></h3>
+    </div>
+    <div class='input-field'>
+      <%= password_field_tag(:password) %>
+    </div>
+
+    <div class='form-submit-div'>
+      <%= submit_tag 'Login' %>
+    </div>
+  <% end %>
+<div>

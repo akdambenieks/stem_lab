@@ -1,0 +1,5 @@
+<div class='header student'>
+  <div><h2>Welcome <%= current_classroom.code_name %></h2></div>
+  <div class='header-nav student'><h3><%= link_to 'Experiments', experiments_path %></h3></div>
+  <div class='header-nav student'><h3><%= link_to 'Log Out', student_sessions_path, method: :delete %></h3></div>
+</div>

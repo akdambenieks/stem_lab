@@ -1,0 +1,41 @@
+<!-- <script>
+$(document).ready(function() {
+  const chrt = $('#expChart');
+  const chrtdata = <%= graph_data %>
+  const graphData = chrtdata.map(function(arr) {
+    return {x: arr[0], y: arr[1]}
+  });
+  // console.log(chrtdata);
+  let expChart = new Chart(chrt, {
+    type: 'scatter',
+    line: {
+      fill: false,
+      borderColor: 'rgba(255,0,0,1)',
+    },
+    data: {
+      datasets: [{
+        data: graphData
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          position: 'bottom'
+        }]
+      }
+    }
+  });
+})
+</script> -->
+
+<!-- <div class='chart-div'>
+<% if @data[0] %>
+<% parse_data = @data&.map {|datum| (JSON.parse datum.data_set)} %>
+<% data_keys = parse_data[0]&.keys %>
+<% raw_data = parse_data.pluck(data_keys[0], data_keys[1]) %>
+<% graph_data = [] %>
+<% raw_data.each{|datum| graph_data.push([datum[0].to_f, datum[1].to_f])} %>
+<canvas id='expChart' style='width:400px;height:400px'></canvas>
+<% end %>
+</div> -->

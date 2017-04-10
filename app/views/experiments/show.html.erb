@@ -1,0 +1,291 @@
+<div class='experiment-megapanel'>
+  <h1><%= @experiment.title %></h1>
+  <p><strong><%= @experiment.description %></strong></p>
+  <div class='card-photo' style='background-image: url(../assets/<%= @experiment.title.split(' ')[0] %>.jpg)'>
+  </div>
+  <% if @experiment.bookmarked_by?(current_user) %>
+    <div class="button-nav" style="background-color:firebrick">
+      <h3>
+        <%= link_to 'Remove this experiment from my list', bookmark_path(@experiment.bookmark_for(current_user)), method: :delete %>
+      </h3>
+    </div>
+  <% elsif current_user %>
+    <div class="button-nav" style="background-color:darkgreen">
+      <h3>
+        <%= link_to 'Add this experiment to my list', bookmarks_path(bookmark: {user_id: current_user.id, experiment_id: @experiment.id}), method: :post %>
+      </h3>
+    </div>
+  <% end %>
+</div>
+<div class='experiment-subpanel'>
+  <div class='materials-div'>
+    <h2 id='materials-dropdown' class='hiding'>Materials <span><%= fa_icon "chevron-down" %></span></h2>
+    <table class='materials-table'>
+      <tr>
+        <th class='quantity-cell'>Quantity</th>
+        <th>Material</th>
+      </tr>
+      <% @materials.each do |mat| %>
+        <tr>
+          <td class='quantity-cell'><%= mat.quantity %> <%= mat.units %></td>
+          <td class='name-cell'><%= mat.name %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+<div class='experiment-subpanel'>
+  <div class='procedures-div'>
+    <h2 id='procedures-dropdown' class='hiding'>Procedure <span><%= fa_icon "chevron-down" %></span></h2>
+    <div class='procedures-list'>
+      <ol>
+        <% @procedures.each do |pro| %>
+          <li><%= pro.description %></li>
+        <% end %>
+      </ol>
+    </div>
+  </div>
+</div>
+<% if current_classroom %>
+  <div class='experiment-subpanel'>
+    <div class='data-list-div'>
+      <h2>Data Collection</h2>
+    </div>
+    <% if @experiment.assigned_to?(current_classroom) || current_user&.role == 'admin' %>
+      <div id="add-data-set" class="button-nav" style="color:white">
+        <h3>Add Data For This Experiment</h3>
+      </div>
+      <div id='data-submit-form-div' style='display:none'>
+        <%= form_tag("/datum", method: "post", remote: true) do %>
+        <%= hidden_field_tag(name="experiment_id", value=@experiment.id) %>
+        <%= hidden_field_tag(name="classroom_id", value=current_classroom&.id) %>
+        <table id='data-submit-table'>
+          <tr>
+            <% @data_list.each do |dat| %>
+              <th><%= dat[0] %></th>
+            <% end %>
+          </tr>
+        </table>
+        <div style="width:100%;display:flex;justify-content:center">
+          <%= submit_tag 'Submit Data' %>
+        </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+<div class='experiment-subpanel'>
+  <% if current_classroom %>
+    <div id="toggle-data" class="button-nav" style="color:white">
+      <h3>Toggle All / Class Data</h3>
+    </div>
+  <% end %>
+  <div id="d3-chart">
+  </div>
+</div>
+<div class='experiment-subpanel'>
+  <div class='messages-div'>
+    <h2 id='messages-dropdown' class='hiding'>Messages <span><%= fa_icon "chevron-down" %></span></h2>
+    <div class='messages-list'>
+      <h3>It doesn't look as if there are any messages posted here yet...</h3>
+      <div id="add-message" class="button-nav" style="color:white">
+        <h3>Start A New Conversation</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="render-d3">
+  <%= render 'd3_chart' %>
+</div>
+
+<%# D3 Chart %>
+<!-- <script>
+d3.json(`http://localhost:3000/api/v1/charts/${<%= @experiment.id %>}`, function(data) {
+
+  const canvasWidth = 700;
+  const canvasHeight = 700;
+  const graphWidth = 600;
+  const graphHeight = 600;
+
+  let filter = 'all';
+  let allData = data.allData;
+  let classData = data.classData;
+  console.log(allData);
+  console.log(classData);
+
+  let maxX = d3.max(allData.map(function(d) {return d.x}));
+  let maxY = d3.max(allData.map(function(d) {return d.y}));
+
+  const xScaling = d3.scaleLinear()
+    .domain([0, maxX *1.1])
+    .range([0, graphWidth]);
+
+  const yScaling = d3.scaleLinear()
+    .domain([0, maxY * 1.1])
+    .range([graphHeight,0]);
+
+
+  const canvas =  d3.select('#d3-chart')
+                  .append('svg')
+                  .attr("width", canvasWidth)
+                  .attr("height", canvasHeight);
+
+  const chartTitle = canvas.append("text")
+    .attr("x", 350)
+    .attr("y", 50)
+    .attr("font-size", "20px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`${filter.charAt(0).toUpperCase() + filter.slice(1)} Data`);
+
+  const xAxisTitle = canvas.append("text")
+    .attr("x", 350)
+    .attr("y", 690)
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`Ratio of Glue to Borax (v/w)`);
+
+  const yAxisTitle = canvas.append("text")
+    .attr("x", -350)
+    .attr("y", 25)
+    .attr("transform", "rotate(-90)")
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`Viscocity (mm/min)`);
+
+  d3.select('#toggle-data')
+    .on("click", function() {
+      if (filter == 'all') {
+        filter = 'class';
+      } else {
+        filter = 'all';
+      }
+      canvas.select("g").selectAll("circle").remove()
+      let circle = canvas.select("g").selectAll("circle")
+        .data(eval(filter+"Data"))
+        .enter()
+        .append("circle")
+        .attr("transform", "translate(50,50)")
+        .attr("r", 5)
+        .attr("fill", "rgba(0,0,255,0.5)")
+        .attr("stroke", "blue")
+        .attr("stroke-width", 1)
+        .attr("cx", function (d) {
+          return xScaling(d.x);
+        })
+        .attr("cy", function (d) {
+          return yScaling(d.y);
+        });
+      chartTitle.text(`${filter.charAt(0).toUpperCase() + filter.slice(1)} Data`);
+    })
+
+    canvas.append("g").selectAll("circle")
+    .data(eval(filter+"Data"))
+    .enter()
+    .append("circle")
+    .attr("transform", "translate(50,50)")
+    .attr("r", 5)
+    .attr("fill", "rgba(0,0,255,0.5)")
+    .attr("stroke", "blue")
+    .attr("stroke-width", 1)
+    .attr("cx", function (d) {
+      return xScaling(d.x);
+    })
+    .attr("cy", function (d) {
+      return yScaling(d.y);
+    });
+
+  const xAxis = d3.axisBottom()
+    .ticks(20)
+    .scale(xScaling);
+
+  const yAxis = d3.axisLeft()
+    .ticks(20)
+    .scale(yScaling);
+
+  canvas.append("g")
+    .attr("transform", "translate(50,650)")
+    .call(xAxis);
+
+  canvas.append("g")
+    .attr("transform", "translate(50,50)")
+    .call(yAxis);
+
+  });
+</script> -->
+
+<script>
+$(document).ready(function() {
+
+
+  $('#materials-dropdown').on('click', function ({currentTarget}) {
+    const materialsTable = $('.materials-table');
+    if ($(currentTarget).hasClass('hiding')){
+      $(currentTarget).html('Materials <span><%= fa_icon "chevron-up" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      materialsTable.fadeIn();
+    } else if ($(currentTarget).hasClass('showing')) {
+      $(currentTarget).html('Materials <span><%= fa_icon "chevron-down" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      materialsTable.fadeOut();
+    }
+  });
+
+  $('#procedures-dropdown').on('click', function ({currentTarget}) {
+    const proceduresList = $('.procedures-list');
+    if ($(currentTarget).hasClass('hiding')){
+      $(currentTarget).html('Procedure <span><%= fa_icon "chevron-up" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      proceduresList.fadeIn();
+    } else if ($(currentTarget).hasClass('showing')) {
+      $(currentTarget).html('Procedure <span><%= fa_icon "chevron-down" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      proceduresList.fadeOut();
+    }
+  });
+
+  $('#messages-dropdown').on('click', function ({currentTarget}) {
+    const messagesList = $('.messages-list');
+    if ($(currentTarget).hasClass('hiding')){
+      $(currentTarget).html('Messages <span><%= fa_icon "chevron-up" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      messagesList.fadeIn();
+    } else if ($(currentTarget).hasClass('showing')) {
+      $(currentTarget).html('Messages <span><%= fa_icon "chevron-down" %></span>');
+      $(currentTarget).toggleClass('hiding');
+      $(currentTarget).toggleClass('showing');
+      messagesList.fadeOut();
+    }
+  });
+
+  const newDataFormRow = () => {
+    return (
+      `<tr>
+      <td><%= number_field_tag("data[][x]", nil, step: 0.0001) %></td>
+      <td><%= number_field_tag("data[][y]", nil, step: 0.0001) %></td>
+      </tr>`
+    )
+  };
+
+  $('#add-data-set').on('click', function (event) {
+    const {currentTarget} = event;
+    const dataSubmitFormDiv = $('#data-submit-form-div');
+    const dataSubmitTable = $('#data-submit-table');
+    event.preventDefault();
+    console.log("Data Submit Button Pushed");
+    dataSubmitFormDiv.show();
+    dataSubmitTable.append(newDataFormRow());
+  });
+})
+</script>

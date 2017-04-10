@@ -1,0 +1,38 @@
+<div class='card-holder'>
+  <% if user_signed_in? %>
+    <div class='card'>
+      <div class='button-nav'><h3><%= link_to 'Log Out', sessions_path, method: :delete %></h3></div>
+      <div class='card-photo'></div>
+    </div>
+  <% elsif student_signed_in? %>
+    <div class='card'>
+      <div class='button-nav'><h3><%= link_to 'Log Out', student_sessions_path, method: :delete %></h3></div>
+      <div class='card-photo'></div>
+    </div>
+  <% else %>
+    <%= link_to new_student_session_path do %>
+    <div class='card'>
+      <h2>Student Login</h2>
+      <div class='card-photo' style="background-image: url(assets/student-login.jpg)"></div>
+    </div>
+    <% end %>
+    <%= link_to new_session_path do %>
+    <div class='card'>
+      <h2>Educator Login</h2>
+      <div class='card-photo' style="background-image: url(assets/educator-login.jpg)"></div>
+    </div>
+    <% end %>
+    <%= link_to new_session_path do %>
+    <div class='card'>
+      <h2>Expert Login</h2>
+      <div class='card-photo' style="background-image: url(assets/expert-login.jpg)"></div>
+    </div>
+    <% end %>
+    <%= link_to new_user_path do %>
+    <div class='card'>
+      <h2>Educator/Expert Signup</h2>
+      <div class='card-photo' style="background-image: url(assets/signup.png)"></div>
+    </div>
+    <% end %>
+  <% end %>
+</div>

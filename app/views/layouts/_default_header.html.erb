@@ -1,0 +1,27 @@
+<div class='header'>
+  <div class='header-left'>
+    <h1><%= link_to 'STEM', root_path %></h1>
+    <h1><%= link_to 'LAB', root_path %></h1>
+  </div>
+  <div class='header-right'>
+    <div class='header-right-top'>
+      <% if current_user %>
+        <h1>Welcome <%= current_user.full_name %></h1>
+      <% elsif current_classroom %>
+        <h1>Your Classroom: <%= current_classroom.code_name %></h1>
+      <% end %>
+    </div>
+    <div class='header-right-bottom'>
+      <% if current_user&.role == 'educator' %>
+        <h1><%= link_to 'CLASSROOMS', classrooms_path %></h1>
+      <% end %>
+      <% if current_user&.role == 'admin' %>
+        <h1><%= link_to 'DASHBOARD', admin_dashboard_index_path %></h1>
+      <% end %>
+      <% if user_signed_in? || student_signed_in? %>
+        <h1><%= link_to 'EXPERIMENTS', experiments_path%></h1>
+        <h1><%= link_to 'LOGOUT', sessions_path, method: :delete %></h1>
+      <% end %>
+    </div>
+  </div>
+</div>

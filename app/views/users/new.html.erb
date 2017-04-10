@@ -1,0 +1,69 @@
+<h2>Please Fill out this form to join the STEM-LAB community</h2>
+<%= alert %>
+<div class='form-container'>
+  <%= form_tag("/users", method: "post") do %>
+    <div class='user-form'>
+      <h3>Information about you:</h3>
+      <div class='form-text'>
+        <%= label_tag(:first_name, "First Name") %>
+        <%= text_field_tag(:first_name, @user.first_name || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:last_name, "Last Name") %>
+        <%= text_field_tag(:last_name, @user.last_name || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:email, "Email") %>
+        <%= email_field_tag(:email, @user.email || '')%>
+      </div>
+      <div class='user-role-radio'>
+        <p>I am signing up as a(n):<p>
+        <%= radio_button_tag(:role, "educator") %>
+        <%= label_tag(:role_educator, "Educator") %>
+        <%= radio_button_tag(:role, "expert") %>
+        <%= label_tag(:role_expert, "Expert") %>
+      </div>
+      <div class='form-password'>
+        <%= label_tag(:password, "Password") %>
+        <%= password_field_tag(:password) %>
+      </div>
+      <div class='form-password'>
+        <%= label_tag(:password_confirmation, "Password Confirmation") %>
+        <%= password_field_tag(:password_confirmation) %>
+      </div>
+    </div>
+    <div class='institution-form'>
+      <h3>Information about your institution:</h3>
+      <div class='form-text'>
+        <%= label_tag(:name, "Institution Name") %>
+        <%= text_field_tag(:name, @institution.name || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:country, "Country") %>
+        <%= text_field_tag(:country, @institution.country || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:city, "City") %>
+        <%= text_field_tag(:city, @institution.city || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:street, "Street Address") %>
+        <%= text_field_tag(:street, @institution.street || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:postal_code, "Postal Code") %>
+        <%= text_field_tag(:postal_code, @institution.postal_code || '')%>
+      </div>
+      <div class='form-text'>
+        <%= label_tag(:contact_phone, "Contact Phone Number At Your Institution") %>
+        <%= text_field_tag(:contact_phone, @institution.contact_phone || '')%>
+      </div>
+    </div>
+    <div class='form-submit-div'>
+      <%= submit_tag("Singup") %>
+    </div>
+  <% end %>
+  <div id='new-user-info-explain'>
+    <p>Why are we asking for this information?</p>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+// $('#d3-chart').html('');
+
+// $('circle').remove();
+$('g').remove();
+$('text').remove();
+const eId = <%= @experiment.id %>
+
+  d3.json(`http://localhost:3000/api/v1/charts/${eId}`, function(data) {
+  //
+  const canvasWidth = 700;
+  const canvasHeight = 700;
+  const graphWidth = 600;
+  const graphHeight = 600;
+  //
+  let filter = 'all';
+  let allData = data.allData;
+  let classData = data.classData;
+  console.log(allData);
+  console.log(classData);
+  console.log(data.class_id);
+  //
+  let maxX = d3.max(allData.map(function(d) {return d.x}));
+  let maxY = d3.max(allData.map(function(d) {return d.y}));
+  //
+  const xScaling = d3.scaleLinear()
+    .domain([0, maxX *1.1])
+    .range([0, graphWidth]);
+
+  const yScaling = d3.scaleLinear()
+    .domain([0, maxY * 1.1])
+    .range([graphHeight,0]);
+  //
+  //
+  const canvas =  d3.select('#d3-chart')
+                  .select('svg')
+  //                 .attr("width", canvasWidth)
+  //                 .attr("height", canvasHeight);
+
+  //
+  const chartTitle = canvas.append("text")
+    .attr("x", 350)
+    .attr("y", 50)
+    .attr("font-size", "20px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`${filter.charAt(0).toUpperCase() + filter.slice(1)} Data`);
+  //
+  const xAxisTitle = canvas.append("text")
+    .attr("x", 350)
+    .attr("y", 690)
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`Ratio of Glue to Borax (v/w)`);
+  //
+  const yAxisTitle = canvas.append("text")
+    .attr("x", -350)
+    .attr("y", 25)
+    .attr("transform", "rotate(-90)")
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .attr("font-align", "center")
+    .style("text-anchor", "middle")
+    .text(`Viscocity (mm/min)`);
+  //
+  d3.select('#toggle-data')
+    .on("click", function() {
+      if (filter == 'all') {
+        filter = 'class';
+      } else {
+        filter = 'all';
+      }
+      canvas.select("g").selectAll("circle").remove()
+      let circle = canvas.select("g").selectAll("circle")
+        .data(eval(filter+"Data"))
+        .enter()
+        .append("circle")
+        .attr("transform", "translate(50,50)")
+        .attr("r", 5)
+        .attr("fill", "rgba(0,0,255,0.5)")
+        .attr("stroke", "blue")
+        .attr("stroke-width", 1)
+        .attr("cx", function (d) {
+          return xScaling(d.x);
+        })
+        .attr("cy", function (d) {
+          return yScaling(d.y);
+        });
+      chartTitle.text(`${filter.charAt(0).toUpperCase() + filter.slice(1)} Data`);
+    })
+  //
+    canvas.append("g").selectAll("circle")
+    .data(eval(filter+"Data"))
+    .enter()
+    .append("circle")
+    .attr("transform", "translate(50,50)")
+    .attr("r", 5)
+    .attr("fill", "rgba(0,0,255,0.5)")
+    .attr("stroke", "blue")
+    .attr("stroke-width", 1)
+    .attr("cx", function (d) {
+      return xScaling(d.x);
+    })
+    .attr("cy", function (d) {
+      return yScaling(d.y);
+    });
+  //
+  const xAxis = d3.axisBottom()
+    .ticks(20)
+    .scale(xScaling);
+
+  const yAxis = d3.axisLeft()
+    .ticks(20)
+    .scale(yScaling);
+
+  canvas.append("g")
+    .attr("transform", "translate(50,650)")
+    .call(xAxis);
+
+  canvas.append("g")
+    .attr("transform", "translate(50,50)")
+    .call(yAxis);
+});

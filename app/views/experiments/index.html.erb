@@ -1,0 +1,63 @@
+<h1>List of Experiments</h1>
+<% if current_user&.role == 'expert' || current_user&.role == 'admin' %>
+  <div class='button-nav'><h3><%= link_to 'Propose New Experiment', new_experiment_path %></h3></div>
+<% end %>
+<h3>Filter Experiments By Category</h3>
+<div class='tag-filter-holder'>
+  <div style="width:100%">
+    <h2 style="text-align:center">Filter Experiments By Category</h2>
+  </div>
+  <% @tags.each do |tag| %>
+    <div class='filter-tag-div' id='<%= tag.name %>'><%= tag.name %></div>
+  <% end %>
+</div>
+<div class='card-holder'>
+  <% if @experiments.exists? %>
+    <% @experiments.each do |exp| %>
+      <%= link_to experiment_path(exp), class: "exp-card-link #{exp.tags.pluck(:name).join(' ')}" do %>
+        <div class='card' style="border:<%= exp.approved ? 'solid grey 3px' : 'solid firebrick 3px'%>">
+          <h2><%= exp.title %></h2>
+          <div class='card-photo' style='background-image: url(/assets/<%= exp.title.split(' ')[0] %>.jpg)'></div>
+          <p><strong><%= exp.description %></strong></p>
+          <div class='card-tag-list'>
+            <% exp.tags.each do |tag| %>
+            <div class='tag-div'><%= tag.name %></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <h2 style="color:white">You currently have no experiments assigned</h2>
+  <% end %>
+</div>
+
+
+<script>
+$(document).ready(function() {
+
+  let filter = '';
+
+  $('.tag-filter-holder').on('click', function (event) {
+    const {target} = event;
+    console.log(target.id);
+    $('.selected-tag').removeClass('selected-tag');
+    if (filter !== target.id) {
+      $(target).addClass('selected-tag');
+      $('.exp-card-link').hide();
+      $(`.${target.id}`).show();
+      filter = target.id;
+    } else {
+      filter = '';
+      $('.exp-card-link').show();
+    }
+  });
+
+// btns.addEventListener(MouseEvent.MOUSE_OVER, onOver);
+// // btns = the thing before the dot of an addEventListener call
+// function onOver(e:MouseEvent):void{
+//   trace(e.target.name, e.currentTarget.name);
+// }
+
+})
+</script>

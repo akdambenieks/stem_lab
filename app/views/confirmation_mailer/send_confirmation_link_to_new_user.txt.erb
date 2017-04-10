@@ -1,0 +1,11 @@
+Hello <%= @user.full_name %>
+Thank you for Signing up with STEM-LAB as an <%= @user.user_role %>
+
+Just one more simple step before you can access and contribute to the STEM-LAB experience
+Please follow the link below to confirm your email:
+If you have received this message in error, please disregard and delete this email
+
+localhost:3000/users/confirmation?token=<%=@user.confirmation_token%>
+
+Thank you and welcome to STEM-LAB,
+      The STEM-LAB Team

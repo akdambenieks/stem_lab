@@ -1,0 +1,25 @@
+<div class='experiment-megapanel'>
+  <h1>Code Name: <%= @classroom.code_name %></h1>
+  <p><strong>Assigned Experiments: <%= @classroom.experiments.count%> | Total Contributions: <%= @classroom.data.count %></strong></p>
+  <p><strong>Only experiments you have assigned will be visible to your class</strong></p>
+</div>
+<div class='card-holder'>
+  <% @experiments.each do |exp| %>
+    <div class='<%= exp.assigned_to?(@classroom) ? 'ed-card-assigned' : 'ed-card' %>'>
+      <h2><%= exp.title %></h2>
+      <div class='card-photo' style='background-image: url(/assets/<%= exp.title.split(' ')[0] %>.jpg)'></div>
+      <p><strong><%= exp.description %></strong></p>
+      <div class='card-tag-list'>
+        <% exp.tags.each do |tag| %>
+        <div class='tag-div'><%= tag.name %></div>
+        <% end %>
+      </div>
+      <% if exp.assigned_to?(@classroom) %>
+      <div class='button-nav' style="background-color:firebrick;color:white"><h3 style="color:white"><%= link_to 'Unassign This Experiment', assigned_experiment_path(exp.assignment_for(@classroom)), method: :delete %></h3></div>
+      <% else %>
+      <div class='button-nav' style="background-color:darkblue;"><h3 style="color:white"><%= link_to 'Assign This Experiment', assigned_experiments_path(assigned_experiment: {experiment_id: exp.id, classroom_id: @classroom.id}), method: :post %></h3></div>
+      <% end %>
+    </div>
+  <% end %>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StemLab</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+  </head>
+
+  <% if current_classroom %>
+    <% usertype = 'student' %>
+  <% elsif current_user&.role == 'educator' %>
+    <% usertype = 'educator' %>
+  <% elsif current_user&.role == 'expert' %>
+    <% usertype = 'expert' %>
+  <% elsif current_user&.role == 'admin' %>
+    <% usertype = 'admin' %>
+  <% else %>
+    <% usertype = 'default' %>
+  <% end %>
+
+  <!-- <body class=<%= usertype %>> -->
+  <body>
+
+      <%= render '/layouts/default_header' %>
+    <div class='main-div'>
+      <!-- <% if notice %>
+        <div class='notice-div'><%= notice %></div>
+      <% end %>
+      <% if alert %>
+        <div class='alert-div'><%= alert %></div>
+      <% end %> -->
+      <%= yield %>
+    </div>
+  </body>
+</html>
