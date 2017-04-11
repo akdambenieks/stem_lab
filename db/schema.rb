@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170405192712) do
+ActiveRecord::Schema.define(version: 20170411224301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,16 +44,6 @@ ActiveRecord::Schema.define(version: 20170405192712) do
     t.index ["user_id"], name: "index_classrooms_on_user_id", using: :btree
   end
 
-  create_table "data", force: :cascade do |t|
-    t.integer  "experiment_id"
-    t.integer  "classroom_id"
-    t.json     "data_set"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["classroom_id"], name: "index_data_on_classroom_id", using: :btree
-    t.index ["experiment_id"], name: "index_data_on_experiment_id", using: :btree
-  end
-
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
@@ -76,7 +66,6 @@ ActiveRecord::Schema.define(version: 20170405192712) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.boolean  "approved"
-    t.json     "data_types"
     t.index ["user_id"], name: "index_experiments_on_user_id", using: :btree
   end
 
@@ -99,6 +88,17 @@ ActiveRecord::Schema.define(version: 20170405192712) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["experiment_id"], name: "index_materials_on_experiment_id", using: :btree
+  end
+
+  create_table "plots", force: :cascade do |t|
+    t.integer  "experiment_id"
+    t.string   "plot_type"
+    t.string   "x",                          array: true
+    t.string   "y",                          array: true
+    t.string   "z",                          array: true
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["experiment_id"], name: "index_plots_on_experiment_id", using: :btree
   end
 
   create_table "procedures", force: :cascade do |t|
@@ -159,10 +159,9 @@ ActiveRecord::Schema.define(version: 20170405192712) do
   add_foreign_key "bookmarks", "users"
   add_foreign_key "classrooms", "institutions"
   add_foreign_key "classrooms", "users"
-  add_foreign_key "data", "classrooms"
-  add_foreign_key "data", "experiments"
   add_foreign_key "experiments", "users"
   add_foreign_key "materials", "experiments"
+  add_foreign_key "plots", "experiments"
   add_foreign_key "procedures", "experiments"
   add_foreign_key "scatter_data_sets", "classrooms"
   add_foreign_key "scatter_data_sets", "experiments"
