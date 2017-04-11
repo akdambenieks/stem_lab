@@ -96,6 +96,7 @@ a {
   border-radius: 5px;
   background-color: black;
   margin: 20px auto;
+  color: white;
 }
 
 .button-nav a {
@@ -230,6 +231,14 @@ input {
   border-radius: 10px;
 }
 
+textarea {
+  padding: 10px;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  width: 80%;
+}
+
 .experiment-megapanel {
   display: flex;
   flex-direction: column;
@@ -356,7 +365,7 @@ th {
   align-items: center;
   background-color: silver;
   margin-bottom: 30px;
-  padding: 10px;
+  padding: 20px;
   filter: drop-shadow(0 0 30px silver);
 }
 
@@ -446,4 +455,34 @@ th {
 
 .button-nav h3 a {
   color: white;
+}
+
+#plot-selector {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.plot-type-card {
+  border-radius: 8px;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  margin: 20px;
+  width: 35%;
+  text-align: center;
+}
+
+.selected-plot h2 {
+  color: firebrick;
+}
+
+#plot-form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
 }

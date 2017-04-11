@@ -1,7 +1,9 @@
-<h1>List of Experiments</h1>
-<% if current_user&.role == 'expert' || current_user&.role == 'admin' %>
-  <div class='button-nav'><h3><%= link_to 'Propose New Experiment', new_experiment_path %></h3></div>
-<% end %>
+<div class='experiment-subpanel'>
+  <h1>List of Experiments</h1>
+  <% if current_user&.role == 'expert' || current_user&.role == 'admin' %>
+    <div class='button-nav'><h3><%= link_to 'Propose New Experiment', new_experiment_path %></h3></div>
+  <% end %>
+</div>
 <h3>Filter Experiments By Category</h3>
 <div class='tag-filter-holder'>
   <div style="width:100%">
@@ -15,7 +17,7 @@
   <% if @experiments.exists? %>
     <% @experiments.each do |exp| %>
       <%= link_to experiment_path(exp), class: "exp-card-link #{exp.tags.pluck(:name).join(' ')}" do %>
-        <div class='card' style="border:<%= exp.approved ? 'solid grey 3px' : 'solid firebrick 3px'%>">
+        <div class='card' style="filter:<%= exp.approved ? 'drop-shadow(0,0,30px, silver)' : 'drop-shadow(0,0,30px, firebrick)'%>">
           <h2><%= exp.title %></h2>
           <div class='card-photo' style='background-image: url(/assets/<%= exp.title.split(' ')[0] %>.jpg)'></div>
           <p><strong><%= exp.description %></strong></p>
@@ -53,11 +55,6 @@ $(document).ready(function() {
     }
   });
 
-// btns.addEventListener(MouseEvent.MOUSE_OVER, onOver);
-// // btns = the thing before the dot of an addEventListener call
-// function onOver(e:MouseEvent):void{
-//   trace(e.target.name, e.currentTarget.name);
-// }
 
 })
 </script>

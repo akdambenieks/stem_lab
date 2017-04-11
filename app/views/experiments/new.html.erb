@@ -1,71 +1,87 @@
-<h1>Propose a New Experiment</h1>
-<div class='new-experiment-form'>
-  <%= form_tag("/experiments", method: "post") do %>
-    <div class='experiment-form-fields'>
-      <div class='form-text'>
-        <%= label_tag(:experiment_title, "Title") %>
-        <%= text_field_tag(name="experiment[title]", @experiment.title || '')%>
-      </div>
-      <div class='form-textarea'>
-        <%= label_tag(:experiment_description, "Description") %>
-        <%= text_area_tag(name="experiment[description]", @experiment.description || '') %>
-      </div>
-      <%= label_tag(:experiment_tags, "Category Tags") %>
-      <div class='new-experiment-tags-div'>
-        <div class='tags-div-left'>
-          <ul class='tag-list'>
-            <% @tags_left.each do |tag| %>
-              <li>
-                <%=check_box_tag(name="tags[][#{tag.id}]") %>
-                <%= label_tag(name="tags[][#{tag.id}]", "#{tag.name}") %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-        <div class='tags-div-right'>
-          <ul class='tag-list'>
-            <% @tags_right.each do |tag| %>
-              <li>
-                <%=check_box_tag(name="tags[][#{tag.id}]") %>
-                <%= label_tag(name="tags[][#{tag.id}]", "#{tag.name}") %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class='materials-form-fields'>
-      <h2>Materials:</h2>
-      <table id='materials-table' style='display:none'>
-        <tr>
-          <th>Quantity</th>
-          <th>Units</th>
-          <th>Material Name</th>
-        </tr>
-      </table>
-      <button id='add-material'>Add A Material</button>
-    </div>
-    <div class='procedure-form-fields'>
-      <h2>Procedure Steps:</h2>
-      <ol id='procedures-list' style='display:none'>
-      </ol>
-      <button id='add-procedure-step'>Add A Procedural Step</button>
-    </div>
-    <div class='data-types-form-fields'>
-      <h2>Data to be collected:</h2>
-      <table id='data-types-table' style='display:none'>
-        <tr>
-          <th>Name of Data (including units)</th>
-          <th>Type of Data</th>
-        </tr>
-      </table>
-      <button id='add-data-type'>Add A Data Type</button>
-    </div>
-    <div class='form-submit'>
-      <%= submit_tag("Propose Experiment") %>
-    </div>
-  <% end %>
+<div class='experiment-subpanel'>
+  <h1>Propose a New Experiment</h1>
 </div>
+<%= form_tag("/experiments", method: "post") do %>
+  <div class='experiment-subpanel'>
+    <h1>Details</h1>
+    <div class='form-text'>
+      <%= label_tag(:experiment_title, "Title") %>
+      <%= text_field_tag(name="experiment[title]", @experiment.title || '')%>
+    </div>
+    <div class='form-textarea'>
+      <%= label_tag(:experiment_description, "Description") %>
+      <%= text_area_tag(name="experiment[description]", @experiment.description || '') %>
+    </div>
+    <%= label_tag(:experiment_tags, "Category Tags") %>
+    <div class='new-experiment-tags-div'>
+      <div class='tags-div-left'>
+        <ul class='tag-list'>
+          <% @tags_left.each do |tag| %>
+            <li>
+              <%=check_box_tag(name="tags[][#{tag.id}]") %>
+              <%= label_tag(name="tags[][#{tag.id}]", "#{tag.name}") %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class='tags-div-right'>
+        <ul class='tag-list'>
+          <% @tags_right.each do |tag| %>
+            <li>
+              <%=check_box_tag(name="tags[][#{tag.id}]") %>
+              <%= label_tag(name="tags[][#{tag.id}]", "#{tag.name}") %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class='experiment-subpanel'>
+    <h2>Materials</h2>
+    <div class='button-nav' id='add-material'><h3>Add A New Material</h3></div>
+    <table id='materials-table' style='display:none'>
+      <tr>
+        <th>Quantity</th>
+        <th>Units</th>
+        <th>Material Name</th>
+      </tr>
+    </table>
+  </div>
+  <div class='experiment-subpanel'>
+    <h2>Procedure Steps</h2>
+    <div class='button-nav' id='add-procedure-step'><h3>Add A Procedural Step</h3></div>
+    <ol id='procedures-list' style='display:none'>
+    </ol>
+  </div>
+  <div class='experiment-subpanel'>
+    <h2>Data Collection / Analysis</h2>
+    <div class='button-nav' id='add-data-type'><h3>Add Data Type / Analysis</h3></div>
+    <div id='plot-selector' style='display:none'>
+      <div class='plot-type-card' id="scatter">
+        <h2>2D Scatter Plot</h2>
+        <div></div>
+      </div>
+      <div class='plot-type-card' id="bubble">
+        <h2>2D Bubble Plot</h2>
+        <div></div>
+      </div>
+      <div class='plot-type-card' id="bar">
+        <h2>Bar Graph</h2>
+        <div></div>
+      </div>
+      <div class='plot-type-card' id="pie">
+        <h2>Pie Chart</h2>
+        <div></div>
+      </div>
+      <div id='plot-form'>
+      </div>
+    </div>
+  </div>
+  <div class='form-submit'>
+    <%= submit_tag("Propose Experiment") %>
+  </div>
+<% end %>
+
 
 <script>
 $(document).ready(function() {
@@ -88,40 +104,76 @@ $(document).ready(function() {
     )
   };
 
-  const newDataTypeFormRow = () => {
+  const scatter = () => {
     return (
-      `<tr>
-        <td><%= text_field_tag(name="experiment[data][][name]") %></td>
-        <td><%= select_tag(name="experiment[data][][type]", options_for_select([['Text', 'text'], ['Integer', 'integer'], ['Decimal', 'float']])) %></td>
-      </tr>`
+      `<%= hidden_field_tag(name="plot-type", value="scatter") %>
+      <table>
+        <tr>
+          <th>X-Axis Title (with units)</th>
+          <th>Y-Axis Title (with units)</th>
+        </tr>
+        <tr>
+          <td><%= text_field_tag(name="x-axis") %></td>
+          <td><%= text_field_tag(name="y-axis") %></td>
+        </tr>
+      </table>`
     )
-  }
+  };
+
+  const bubble = () => {
+    return (
+      `<h2 style='color:firebrick'>Sorry, this feature is not yet implemented</h2>`
+    )
+  };
+
+  const bar = () => {
+    return (
+      `<h2 style='color:firebrick'>Sorry, this feature is not yet implemented</h2>`
+    )
+  };
+
+  const pie = () => {
+    return (
+      `<h2 style='color:firebrick'>Sorry, this feature is not yet implemented</h2>`
+    )
+  };
 
   $('#add-material').on('click', function (event) {
     const {currentTarget} = event;
     const materialsTable = $('#materials-table');
-    event.preventDefault();
     console.log("Material Button Pushed");
-    materialsTable.show();
+    materialsTable.fadeIn();
     materialsTable.append(newMaterialFormRow());
   });
 
   $('#add-procedure-step').on('click', function (event) {
     const {currentTarget} = event;
     const proceduresList = $('#procedures-list');
-    event.preventDefault();
     console.log("Procedure Button Pushed");
-    proceduresList.show();
+    proceduresList.fadeIn();
     proceduresList.append(newProcedureListItem());
   });
 
   $('#add-data-type').on('click', function (event) {
     const {currentTarget} = event;
-    const dataTypesTable = $('#data-types-table');
-    event.preventDefault();
+    const plotSelector = $('#plot-selector');
     console.log("Data Types Button Pushed");
-    dataTypesTable.show();
-    dataTypesTable.append(newDataTypeFormRow());
+    plotSelector.fadeIn();
   });
+
+  $('#plot-selector').on('click', function (event) {
+    const {target} = event;
+    targetPlot = target.closest('.plot-type-card');
+    if ($(targetPlot).hasClass('selected-plot')) {
+      $('#plot-form').empty();
+      $(targetPlot).removeClass('selected-plot');
+    } else {
+      $('.selected-plot').removeClass('selected-plot');
+      $(targetPlot).addClass('selected-plot');
+      $('#plot-form').empty();
+      $('#plot-form').append(eval(targetPlot.id + '()'));
+    }
+  });
+
 })
 </script>
