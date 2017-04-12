@@ -3,11 +3,11 @@ class Experiment < ApplicationRecord
   has_many :assigned_experiments, dependent: :destroy
   has_many :procedures, dependent: :destroy
   has_many :materials, dependent: :destroy
-  has_many :data, dependent: :nullify
   has_many :bookmarks, dependent: :destroy
   has_many :taggings, as: :taggable, dependent: :destroy
   has_many :tags, through: :taggings, source: :tag
-  has_many :scatter_data_sets
+  has_many :plots, dependent: :destroy
+
 
   before_create :set_approved_to_false
 

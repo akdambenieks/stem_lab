@@ -1,6 +1,3 @@
-// $('#d3-chart').html('');
-
-// $('circle').remove();
 $('g').remove();
 $('text').remove();
 const eId = <%= @experiment.id %>
@@ -33,8 +30,6 @@ const eId = <%= @experiment.id %>
   //
   const canvas =  d3.select('#d3-chart')
                   .select('svg')
-  //                 .attr("width", canvasWidth)
-  //                 .attr("height", canvasHeight);
 
   //
   const chartTitle = canvas.append("text")

@@ -232,11 +232,11 @@ input {
 }
 
 textarea {
-  padding: 10px;
   font-size: 1.2em;
   margin-bottom: 20px;
   border-radius: 10px;
-  width: 80%;
+  width: 100%;
+  height: 200px;
 }
 
 .experiment-megapanel {
@@ -485,4 +485,22 @@ th {
   justify-content: space-between;
   align-items: center;
   text-align: center;
+}
+
+#new-exp-form {
+  width: 100%;
+}
+
+.form-textarea {
+  width: 100%;
+}
+
+label {
+  font-size: 1.2em;
+  font-weight: bolder;
+  width: 100%;
+}
+
+.tag-list {
+  list-style: none;
 }

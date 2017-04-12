@@ -1,9 +1,9 @@
 <div class='experiment-subpanel'>
   <h1>Propose a New Experiment</h1>
 </div>
-<%= form_tag("/experiments", method: "post") do %>
+<%= form_tag("/experiments", method: "post", id: "new-exp-form") do %>
   <div class='experiment-subpanel'>
-    <h1>Details</h1>
+    <h1>Experiment Details</h1>
     <div class='form-text'>
       <%= label_tag(:experiment_title, "Title") %>
       <%= text_field_tag(name="experiment[title]", @experiment.title || '')%>
@@ -106,15 +106,15 @@ $(document).ready(function() {
 
   const scatter = () => {
     return (
-      `<%= hidden_field_tag(name="plot-type", value="scatter") %>
+      `<%= hidden_field_tag(name="plot[type]", value="scatter") %>
       <table>
         <tr>
           <th>X-Axis Title (with units)</th>
           <th>Y-Axis Title (with units)</th>
         </tr>
         <tr>
-          <td><%= text_field_tag(name="x-axis") %></td>
-          <td><%= text_field_tag(name="y-axis") %></td>
+          <td><%= text_field_tag(name="plot[xaxis]") %></td>
+          <td><%= text_field_tag(name="plot[yaxis]") %></td>
         </tr>
       </table>`
     )

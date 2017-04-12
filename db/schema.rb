@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170411224301) do
+ActiveRecord::Schema.define(version: 20170411224810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,14 +111,14 @@ ActiveRecord::Schema.define(version: 20170411224301) do
   end
 
   create_table "scatter_data_sets", force: :cascade do |t|
-    t.integer  "experiment_id"
     t.integer  "classroom_id"
     t.float    "x"
     t.float    "y"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "plot_id"
     t.index ["classroom_id"], name: "index_scatter_data_sets_on_classroom_id", using: :btree
-    t.index ["experiment_id"], name: "index_scatter_data_sets_on_experiment_id", using: :btree
+    t.index ["plot_id"], name: "index_scatter_data_sets_on_plot_id", using: :btree
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -164,7 +164,6 @@ ActiveRecord::Schema.define(version: 20170411224301) do
   add_foreign_key "plots", "experiments"
   add_foreign_key "procedures", "experiments"
   add_foreign_key "scatter_data_sets", "classrooms"
-  add_foreign_key "scatter_data_sets", "experiments"
   add_foreign_key "taggings", "tags"
   add_foreign_key "users", "institutions"
 end
