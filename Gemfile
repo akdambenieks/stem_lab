@@ -37,6 +37,9 @@ gem 'cancancan'
 gem "font-awesome-rails"
 gem 'colorize'
 
+gem 'carrierwave', '~> 1.0'
+gem 'mini_magick'
+gem 'fog'
 
 # Gems for mailer queue
 gem 'sinatra', '2.0.0.beta2'

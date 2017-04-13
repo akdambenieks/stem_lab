@@ -19,7 +19,7 @@
       <%= link_to experiment_path(exp), class: "exp-card-link #{exp.tags.pluck(:name).join(' ')}" do %>
         <div class='card' style="filter:<%= exp.approved ? 'drop-shadow(0,0,30px, silver)' : 'drop-shadow(0,0,30px, firebrick)'%>">
           <h2><%= exp.title %></h2>
-          <div class='card-photo' style='background-image: url(/assets/<%= exp.title.split(' ')[0] %>.jpg)'></div>
+          <div class='card-photo' style="background-image:url(<%= exp.image ? exp.image : image_url('exp-default.jpg') %>)"></div>
           <p><strong><%= exp.description %></strong></p>
           <div class='card-tag-list'>
             <% exp.tags.each do |tag| %>

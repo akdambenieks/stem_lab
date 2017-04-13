@@ -45,7 +45,7 @@
     .attr("font-weight", "bold")
     .attr("font-align", "center")
     .style("text-anchor", "middle")
-    .text(`Ratio of Glue to Borax (v/w)`);
+    .text(data.xaxis);
 
   const yAxisTitle = canvas.append("text")
     .attr("x", -350)
@@ -55,7 +55,7 @@
     .attr("font-weight", "bold")
     .attr("font-align", "center")
     .style("text-anchor", "middle")
-    .text(`Viscocity (mm/min)`);
+    .text(data.yaxis);
 
   d3.select('#toggle-data')
     .on("click", function() {

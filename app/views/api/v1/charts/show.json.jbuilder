@@ -1,5 +1,8 @@
 json.title @experiment.title
 json.class_id @classroom.id
+json.xaxis @experiment.plots.first.x
+json.yaxis @experiment.plots.first.y
+json.zaxis @experiment.plots.first.z
 if @plot.plot_type == 'scatter'
   json.allData @plot.scatter_data_sets do |data|
     json.x data.x

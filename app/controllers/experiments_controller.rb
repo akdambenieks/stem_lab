@@ -27,8 +27,7 @@ class ExperimentsController < ApplicationController
   end
 
   def create
-    # render json: params
-    experiment_params = params.require(:experiment).permit(:title, :description)
+    experiment_params = params.require(:experiment).permit(:title, :description, :image)
     material_params = params[:material] || []
     procedure_params = params[:procedure] || []
     plot_params = params[:plot] || []
@@ -38,38 +37,37 @@ class ExperimentsController < ApplicationController
 
 
 
-    # if @experiment.save
-    #   material_params.each do |mat|
-    #     material = Material.new
-    #     material.quantity = mat[:quantity]
-    #     material.units = mat[:units]
-    #     material.name = mat[:name]
-    #     material.experiment = @experiment
-    #     material.save
-    #   end
-    #
-    #   proc_step = 1
-    #   procedure_params.each do |pro|
-    #     procedure = Procedure.new
-    #     procedure.step = proc_step
-    #     procedure.description = pro[:description]
-    #     procedure.experiment = @experiment
-    #     procedure.save
-    #     proc_step += 1
-    #   end
+    if @experiment.save
+      material_params.each do |mat|
+        material = Material.new
+        material.quantity = mat[:quantity]
+        material.units = mat[:units]
+        material.name = mat[:name]
+        material.experiment = @experiment
+        material.save
+      end
 
-      # if params[:tags]
-      #   tag_params = params[:tags] ? params[:tags][0] : []
-      #   tag_ids = tag_params.keys
-      #   tag_ids.each do |t|
-      #     tagging = Tagging.new
-      #     tagging.taggable_type = 'experiment'
-      #     tagging.taggable_id = @experiment.id
-      #     tagging.tag = Tag.find_by_id t
-      #     tagging.save
-      #   end
+      proc_step = 1
+      procedure_params.each do |pro|
+        procedure = Procedure.new
+        procedure.step = proc_step
+        procedure.description = pro[:description]
+        procedure.experiment = @experiment
+        procedure.save
+        proc_step += 1
+      end
 
-      # end
+      if params[:tags]
+        tag_params = params[:tags] ? params[:tags][0] : []
+        tag_ids = tag_params.keys
+        tag_ids.each do |t|
+          tagging = Tagging.new
+          tagging.taggable_type = 'experiment'
+          tagging.taggable_id = @experiment.id
+          tagging.tag = Tag.find_by_id t
+          tagging.save
+        end
+      end
 
       if params[:plot]
         plot = Plot.new
@@ -78,12 +76,11 @@ class ExperimentsController < ApplicationController
         plot.x = [plot_params[:xaxis]] || []
         plot.y = [plot_params[:yaxis]] || []
         plot.z = [plot_params[:zaxis]] || []
-        render json: plot
+        plot.save
       end
+    end
 
-    #
-    # end
-
+    redirect_to experiment_path(@experiment)
   end
 
 end

@@ -1,7 +1,7 @@
 <div class='experiment-subpanel'>
   <h1>Propose a New Experiment</h1>
 </div>
-<%= form_tag("/experiments", method: "post", id: "new-exp-form") do %>
+<%= form_tag("/experiments", method: "post", id: "new-exp-form", multipart: true) do %>
   <div class='experiment-subpanel'>
     <h1>Experiment Details</h1>
     <div class='form-text'>
@@ -11,6 +11,10 @@
     <div class='form-textarea'>
       <%= label_tag(:experiment_description, "Description") %>
       <%= text_area_tag(name="experiment[description]", @experiment.description || '') %>
+    </div>
+    <div class='form-text'>
+      <%= label_tag(:experiment_image, "Image Link") %>
+      <%= file_field_tag(name="experiment[image]")%>
     </div>
     <%= label_tag(:experiment_tags, "Category Tags") %>
     <div class='new-experiment-tags-div'>

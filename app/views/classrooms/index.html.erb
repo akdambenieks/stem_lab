@@ -10,7 +10,7 @@
     <% @classrooms.each do |classroom| %>
       <div class='experiment-subpanel'>
         <h2>Code Name: <%= link_to classroom.code_name, classroom_path(classroom) %></h2>
-        <p><strong>Assigned Experiments: <%= classroom.experiments.count%> | Total Contributions: <%= classroom.data.count %></strong></p>
+        <p><strong>Assigned Experiments: <%= classroom.experiments.count%></strong></p>
       </div>
     <% end %>
   <% end %>

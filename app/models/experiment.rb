@@ -9,6 +9,8 @@ class Experiment < ApplicationRecord
   has_many :plots, dependent: :destroy
 
 
+  mount_uploader :image, ImageUploader
+
   before_create :set_approved_to_false
 
   def bookmarked_by?(user)

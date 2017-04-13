@@ -1,7 +1,7 @@
 <div class='experiment-megapanel'>
   <h1><%= @experiment.title %></h1>
   <p><strong><%= @experiment.description %></strong></p>
-  <div class='card-photo' style='background-image: url(../assets/<%= @experiment.title.split(' ')[0] %>.jpg)'>
+  <div class='card-photo' style="background-image:url(<%= @experiment.image %>)">
   </div>
   <% if @experiment.bookmarked_by?(current_user) %>
     <div class="button-nav" style="background-color:firebrick">
